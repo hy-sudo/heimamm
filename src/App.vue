@@ -1,15 +1,12 @@
 <template>
   <div>
-    app.vue
+    <router-link to="#">点我啊</router-link>
   </div>
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
 <style>
-
 </style>
