@@ -44,12 +44,19 @@
         </el-form-item>
       </el-form>
     </div>
+    <!-- 页面右侧的图片 -->
     <img src="../../assets/login_banner_ele.png" alt />
+    <!-- 对话框 -->
+    <reg></reg>
   </div>
 </template>
 
 <script>
+import reg from './components/register'
 export default {
+  components:{
+    reg
+  },
   data() {
     return {
       form: {
