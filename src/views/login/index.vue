@@ -27,7 +27,7 @@
               <el-input placeholder="请输入验证码" prefix-icon="el-icon-key" v-model="form.code"></el-input>
             </el-col>
             <el-col :span="7">
-              <img class="code" src="../../assets/login_code.png" alt />
+              <img class="code" :src="imgURL" alt />
             </el-col>
           </el-row>
         </el-form-item>
@@ -40,31 +40,36 @@
         </el-form-item>
         <el-form-item>
           <el-button class="btn" type="primary" round @click="login">登录</el-button>
-          <el-button class="btn" type="primary" round>注册</el-button>
+          <el-button class="btn" type="primary" round @click="register">注册</el-button>
         </el-form-item>
       </el-form>
     </div>
     <!-- 页面右侧的图片 -->
     <img src="../../assets/login_banner_ele.png" alt />
-    <!-- 对话框 -->
-    <reg></reg>
+    <!-- 注册对话框 -->
+    <reg ref="reg"></reg>
   </div>
 </template>
 
 <script>
-import reg from './components/register'
+import reg from "./components/register";
 export default {
-  components:{
+  components: {
     reg
   },
   data() {
     return {
+      //验证码图片
+      imgURL: process.env.VUE_APP_PicURL + "/captcha?type=sendsms",
+
+      //跟表单元素绑定的对象
       form: {
         phone: "",
         password: "",
         code: "",
         agree: false
       },
+      //规则对象
       rules: {
         phone: [
           { required: true, message: "手机号不能为空", trigger: "blur" },
@@ -75,7 +80,11 @@ export default {
         ],
         code: [{ required: true, message: "验证码不能为空", trigger: "blur" }],
         agree: [
-          { pattern: /true/, message: "必须勾选同意用户协议", trigger: "change" }
+          {
+            pattern: /true/,
+            message: "必须勾选同意用户协议",
+            trigger: "change"
+          }
         ]
       }
     };
@@ -87,6 +96,10 @@ export default {
           alert("全部通过");
         }
       });
+    },
+    //注册按钮点击事件
+    register() {
+      this.$refs.reg.dialogFormVisible = true;
     }
   }
 };
