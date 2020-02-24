@@ -27,7 +27,7 @@
               <el-input placeholder="请输入验证码" prefix-icon="el-icon-key" v-model="form.code"></el-input>
             </el-col>
             <el-col :span="7">
-              <img class="code" :src="imgURL" alt />
+              <img class="code" :src="imgURL" @click="changeImgCode" />
             </el-col>
           </el-row>
         </el-form-item>
@@ -39,7 +39,7 @@
           </el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-button class="btn" type="primary" round @click="login">登录</el-button>
+          <el-button class="btn" type="primary" round @click="doLogin">登录</el-button>
           <el-button class="btn" type="primary" round @click="register">注册</el-button>
         </el-form-item>
       </el-form>
@@ -53,6 +53,8 @@
 
 <script>
 import reg from "./components/register";
+import { login } from "@/api/login.js";
+import {setToken} from '@/utilis/token.js'
 export default {
   components: {
     reg
@@ -60,7 +62,7 @@ export default {
   data() {
     return {
       //验证码图片
-      imgURL: process.env.VUE_APP_PicURL + "/captcha?type=sendsms",
+      imgURL: process.env.VUE_APP_PicURL + "/captcha?type=login&t="+Date.now(),
 
       //跟表单元素绑定的对象
       form: {
@@ -90,16 +92,38 @@ export default {
     };
   },
   methods: {
-    login() {
+    //登录的点击事件
+    doLogin() {
       this.$refs.loginform.validate(v => {
         if (v) {
-          alert("全部通过");
+          //调用login方法发送请求
+          login({
+            phone: this.form.phone,
+            password: this.form.password,
+            code: this.form.code
+          }).then(res => {
+            // window.console.log(res);
+            if(res.data.code == 200){
+              //把token存起来
+              // window.localStorage.setItem('token',res.data.data.token);
+              setToken(res.data.data.token);
+              this.$message.success('登录成功');
+              this.$router.push('/index');
+            }else{
+              this.$message.error(res.data.message);
+            }
+          });
         }
       });
     },
     //注册按钮点击事件
     register() {
       this.$refs.reg.dialogFormVisible = true;
+    },
+    //验证码图片的点击事件
+    changeImgCode() {
+      this.imgURL =
+        process.env.VUE_APP_PicURL + "/captcha?type=login&t=" + Date.now();
     }
   }
 };
