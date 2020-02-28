@@ -10,8 +10,8 @@
         <span class="header_name">黑马面面</span>
       </div>
       <div class="header_right">
-        <img class="userImg" :src="avatar" alt />
-        <span class="username">{{username}}，你好</span>
+        <img class="userImg" :src="$store.state.avatar" alt />
+        <span class="username">{{$store.state.username}}，你好</span>
         <el-button type="primary" size="small" @click="doLogout">退出</el-button>
       </div>
     </el-header>
@@ -60,8 +60,8 @@
 
 <script>
 //导入接口
-import { info, logout } from "@/api/index.js";
-import { removeToken } from "@/utilis/token.js";
+import { logout } from "@/api/index.js";
+import { getToken, removeToken } from "@/utilis/token.js";
 export default {
   data() {
     return {
@@ -70,14 +70,29 @@ export default {
       isCollapse: false
     };
   },
+  beforeCreate() {
+    //通过判断token来判断用户有没有登录
+    if (getToken() == null) {
+      this.$message.error("请先登录！");
+      this.$router.push("/login");
+    }
+  },
   created() {
-    info().then(res => {
-      console.log(res);
-      this.username = res.data.data.username;
-      this.avatar = process.env.VUE_APP_PicURL + "/" + res.data.data.avatar;
-    });
+    //调用info方法发送axios登录请求
+    // info().then(res => {
+    //   if (res.data.code == 200) {
+    //     this.username = res.data.data.username;
+    //     this.avatar = process.env.VUE_APP_PicURL + "/" + res.data.data.avatar;
+    //   } else if (res.data.code == 206) {
+    //     this.$message.error("登录状态异常,请重新登录！");
+    //     // 删除token
+    //     removeToken();
+    //     this.$router.push("/login");
+    //   }
+    // });
   },
   methods: {
+    //退出按钮的点击事件
     doLogout() {
       this.$confirm("您将退出本系统, 是否继续退出?", "是否退出", {
         confirmButtonText: "确定",
@@ -89,7 +104,11 @@ export default {
           logout().then(res => {
             if (res.data.code == 200) {
               this.$message.success("退出成功");
+              //删除TOken
               removeToken();
+              //删除vuex里的数据，手动设置为空
+              this.$store.commit("changeUsername", "");
+              this.$store.commit("changeAvatar", "");
               //跳转到登录页面
               this.$router.push("/login");
             }

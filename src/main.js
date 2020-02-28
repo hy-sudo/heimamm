@@ -7,7 +7,10 @@ import "./style/bese.css"
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 
+//导入vuex对象
+import store from './store/index';
 new Vue({
   render: h => h(App),
   router,
+  store
 }).$mount('#app')
