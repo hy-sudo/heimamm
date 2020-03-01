@@ -202,4 +202,7 @@ export default {
 .box-card {
   margin-bottom: 19px;
 }
+.el-pagination{
+  text-align: center;
+}
 </style>

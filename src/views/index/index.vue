@@ -34,12 +34,12 @@
             <span slot="title">用户列表</span>
           </el-menu-item>
 
-          <el-menu-item index="/index/business">
+          <el-menu-item index="/index/question">
             <i class="el-icon-edit-outline"></i>
             <span slot="title">题库列表</span>
           </el-menu-item>
 
-          <el-menu-item index="/index/question">
+          <el-menu-item index="/index/business">
             <i class="el-icon-office-building"></i>
             <span slot="title">企业列表</span>
           </el-menu-item>

@@ -50,7 +50,7 @@ export function SubjectEdit(data) {
     })
 }
 
-//封装一个编辑学科的接口
+//封装一个删除学科的接口
 export function SubjectRemove(data) {
     return subjectRequest({
         url: "/subject/remove",

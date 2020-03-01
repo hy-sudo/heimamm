@@ -21,8 +21,8 @@ import index from '../views/index/index.vue'
 //导入主页面的子路由
 import chart from '@/views/index/components/chart/chart';
 import user from '@/views/index/components/user/user';
-import business from '@/views/index/components/business/business';
 import question from '@/views/index/components/question/question';
+import business from '@/views/index/components/business/business';
 import subject from '@/views/index/components/subject/subject';
 //2.注册vue-router
 Vue.use(VueRouter)
@@ -58,12 +58,12 @@ const router = new VueRouter({
                 {
                     path: 'business',
                     component: business,
-                    meta: { title: '题库列表' }
+                    meta: { title: '企业列表' }
                 },
                 {
                     path: 'question',
                     component: question,
-                    meta: { title: '企业列表' }
+                    meta: { title: '题库列表' }
                 },
                 {
                     path: 'subject',
