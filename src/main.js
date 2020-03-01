@@ -7,6 +7,9 @@ import "./style/bese.css"
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 
+//导入过滤器全局使用
+import '@/filters/filters.js'
+
 //导入vuex对象
 import store from './store/index';
 new Vue({
