@@ -12,18 +12,13 @@ import { removeToken } from "@/utilis/token.js";
 import { Message } from 'element-ui'
 //导入vuex对象
 import store from '../store/index'
-
+//导入子路由
+import children from './childrenRouter'
 
 //准备login组件
 import login from '../views/login/index.vue';
 //导入index组件
 import index from '../views/index/index.vue'
-//导入主页面的子路由
-import chart from '@/views/index/components/chart/chart';
-import user from '@/views/index/components/user/user';
-import question from '@/views/index/components/question/question';
-import business from '@/views/index/components/business/business';
-import subject from '@/views/index/components/subject/subject';
 //2.注册vue-router
 Vue.use(VueRouter)
 //3.实例化
@@ -33,7 +28,7 @@ const router = new VueRouter({
         {
             path: "/login",
             component: login,
-            meta: { title: '登录' }
+            meta: { title: '登录', roles: ['超级管理员', '管理员', '老师', '学生'] }
         },
         {
             path: "/",
@@ -42,36 +37,9 @@ const router = new VueRouter({
         {
             path: "/index",
             component: index,
-            meta: { title: '首页' },
-            children: [
-                //子路由路径不加/
-                {
-                    path: 'chart',
-                    component: chart,
-                    meta: { title: '数据概览' }
-                },
-                {
-                    path: 'user',
-                    component: user,
-                    meta: { title: '用户列表' }
-                },
-                {
-                    path: 'business',
-                    component: business,
-                    meta: { title: '企业列表' }
-                },
-                {
-                    path: 'question',
-                    component: question,
-                    meta: { title: '题库列表' }
-                },
-                {
-                    path: 'subject',
-                    component: subject,
-                    meta: { title: '学科列表' }
-                },
-            ]
-        },
+            meta: { title: '首页', roles: ['超级管理员', '管理员', '老师', '学生'] },
+            children
+        }
 
     ]
 });
@@ -89,12 +57,36 @@ router.beforeEach((to, from, next) => {
     } else {
         //如果不是就给token做判断
         info().then(res => {
+            console.log(res)
             if (res.data.code == 200) {
                 // console.log(res)
                 //调用vuex里的方法来获取数据
-                store.commit('changeUsername', res.data.data.username);
-                store.commit('changeAvatar', process.env.VUE_APP_PicURL + "/" + res.data.data.avatar);
-                next();
+                if (res.data.data.status == 1) {  // 判断账号登录权限(1为启用)
+                    store.commit('changeUsername', res.data.data.username);
+                    store.commit('changeAvatar', process.env.VUE_APP_PicURL + "/" + res.data.data.avatar);
+                    store.commit('changeRole',res.data.data.role)
+                    //登录页面跳转才提示
+                    if (from.path == '/login') {
+                        Message.success('登录成功');
+                    }
+                    //判断账号身份权限是否有权访问
+                    if (to.meta.roles.includes(res.data.data.role)) {
+                        next();
+                    } else {
+                        Message.warning('该页面,你无权访问~')
+                        //手动完成进度条
+                        NProgress.done();
+                        //打回来时页面
+                        next(from.path)
+                    }
+
+                } else {
+                    Message.warning('账号已被禁用，请与管理员联系~')
+                    //手动完成进度条
+                    NProgress.done();
+                    //打回登录页
+                    next('/login')
+                }
             } else {
                 Message.error('登录状态异常，请重新登录!')
                 //删除Token

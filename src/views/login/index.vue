@@ -107,7 +107,7 @@ export default {
               //把token存起来
               // window.localStorage.setItem('token',res.data.data.token);
               setToken(res.data.data.token);
-              this.$message.success('登录成功');
+              // this.$message.success('登录成功');
               this.$router.push('/index');
             }else{
               this.$message.error(res.data.message);

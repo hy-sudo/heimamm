@@ -8,7 +8,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
         username: "",
-        avatar: ""
+        avatar: "",
+        role: ""
     },
     mutations: {
         changeUsername(state, val) {
@@ -16,7 +17,11 @@ const store = new Vuex.Store({
         },
         changeAvatar(state, val) {
             state.avatar = val
+        },
+        changeRole(state, val) {
+            state.role = val
         }
+
 
     }
 })

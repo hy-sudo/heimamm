@@ -46,14 +46,18 @@
             <span v-else style="color:red">禁用</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" v-if="['超级管理员', '管理员', '老师'].includes($store.state.role)">
           <template slot-scope="scope">
             <el-button type="text" @click="showEdit(scope.row)">编辑</el-button>
             <el-button
               type="text"
               @click="changeStatus(scope.row)"
             >{{scope.row.status === 1 ? "禁用" : "启用"}}</el-button>
-            <el-button type="text" @click="doRemove(scope.row)">删除</el-button>
+            <el-button
+              type="text"
+              @click="doRemove(scope.row)"
+              v-if="['超级管理员', '管理员'].includes($store.state.role)"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -202,7 +206,7 @@ export default {
 .box-card {
   margin-bottom: 19px;
 }
-.el-pagination{
+.el-pagination {
   text-align: center;
 }
 </style>
